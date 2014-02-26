@@ -1,7 +1,7 @@
 <?php
 # MediaWiki MAPKUDataAPI extension v0.1
 
-$wgExtensionCredits['specialpage'][] = array(
+$wgExtensionCredits['semantic'][] = array(
   'path' => __FILE__,
   'name' => 'MAPKUDataAPI',
   'author' => array(
