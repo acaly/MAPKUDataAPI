@@ -15,4 +15,4 @@ $wgExtensionCredits['semantic'][] = array(
 $dir = __DIR__ . '/';
 $wgExtensionMessagesFiles['MAPKUDataAPI'] = $dir . 'MAPKUDataAPI.i18n.php';
 $wgAutoloadClasses['PlaceJsonPrinter'] = $dir . 'queryprinter/PlaceJsonPrinter.php';
-$smwgResultFormats['jsonplace'] = 'PlaceJSONPrinter';
+$smwgResultFormats['jsonplace'] = 'PlaceJsonPrinter';
