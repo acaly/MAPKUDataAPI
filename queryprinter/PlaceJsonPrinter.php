@@ -12,16 +12,13 @@ class PlaceJSONPrinter extends JsonResultPrinter {
   }
 
   public function getParamDefinitions( array $definitions ) {
-    $params = array();
 
-    $params['limit']->setDefault( 100 );
-
-    $params['prettyprint'] = array(
+    $definitions['prettyprint'] = array(
       'type' => 'boolean',
       'default' => '',
       'message' => 'smw-paramdesc-prettyprint',
     );
 
-    return $params;
+    return $definitions;
   }
 }
