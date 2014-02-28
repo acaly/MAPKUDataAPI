@@ -30,52 +30,6 @@ class ApiAllPlaces extends Query {
    * @return void
    */
   private function run( $resultPageSet = null ) {
-    /*
-    $this->getResult()->addValue(null, 'test', 'test');
-
-    $dbr = wfGetDB( DB_SLAVE );
-
-    $cat = Title::newFromText( wfMessage('output_to_api')->text() )->getDBkey();
-    $res = $dbr->select(
-      'categorylinks',
-      'cl_from',
-      array( 'cl_to' => $cat )
-    );
-
-    $resArray = array();
-    foreach ( $res as $row ) {
-      $id = $row->cl_from;
-
-      $title = $dbr->selectField(
-        'page',
-        'page_title',
-        array( 'page_id' => $id ),
-        __METHOD__
-      );
-      if ($title === null) {
-        $resArray[] = array( 'id' => $id, 'missing' );
-      } else {
-        $resArray[] = array( 'id' => $id,
-            'name' => $title );
-      }
-
-      //Query SMW for $title
-      list( $queryString, $parameters, $printouts ) = 
-          SMWQueryProcessor::getComponentsFromFunctionParams(
-            array('[[' . $title . ']]', '?author', 'link=none'),
-            false
-          );
-
-      $queryResult = $this->getQueryResult( $this->getQuery(
-        $queryString,
-        $printouts,
-        $parameters
-      ) );
-      $resArray['smw'] = $queryResult->toArray()['results'];
-    }
-    $this->getResult()->addValue(null, 'result', $resArray);
-    */
-
     $cat = wfMessage('output_to_api')->text();
     list( $queryString, $parameters, $printouts ) = 
         SMWQueryProcessor::getComponentsFromFunctionParams(
@@ -94,7 +48,7 @@ class ApiAllPlaces extends Query {
       $printouts,
       $parameters
     ) );
-    $this->getResult()->addValue(null, 'result', PlaceSerializer::serializePlaceArray($queryResult));
+    PlaceSerializer::serializePlaceArray($queryResult, $this->getResult());
   }
 
   public function getAllowedParams() {

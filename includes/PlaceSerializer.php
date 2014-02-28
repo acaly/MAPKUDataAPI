@@ -59,8 +59,7 @@ class PlaceSerializer {
     return $result;
   }
 
-  public static function serializePlaceArray($queryResult) {
-    $results = array();
+  public static function serializePlaceArray($queryResult, $resultList) {
 
     foreach ( $queryResult->getResults() as $diWikiPage ) {
       if ( !($diWikiPage->getTitle() instanceof Title ) ) {
@@ -100,9 +99,7 @@ class PlaceSerializer {
           $result['google_longi'] = $coord['lon'];
         }
       }
-      $results[] = $result;
+      $resultList.addValue(null, null, $result);
     }
-
-    return $results;
   }
 }
