@@ -101,7 +101,7 @@ class PlaceSerializer {
           $result['google_longi'] = $coord['lon'];
         }
       }
-      $resultList.addValue(null, null, $result);
+      $resultList->addValue(null, null, $result);
     }
   }
 }
