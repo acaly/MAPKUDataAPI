@@ -1,0 +1,60 @@
+Readme
+
+API changes:
+
+1. for place
+* removed: 'tags', 'remarks', 'description', 'email', 'tel', 'opening_hours'
+* another query: 'guide_ids', 'img_count', 'sort_ids',
+
+Original API:
+/places/:id.json
+/places/search.json
+/places/:id/:img_id.jpg
+/sorts.json
+/tags/autocomplete.json
+/sorts/version.json
+/places/version.json
+/places/:id/guides.json
+/guides/version.json
+/tips.json
+
+New API:
+/places/{name}.json => All information, with guides and images
+/places/search.json => [ {name:} ]
+/images/{img_name} => Image file
+/sorts.json => sequence will always return 1
+?autocomplete => Not supported
+/sorts/version.json => No longer remove, but provide all pages that exists
+/places/version.json => Similar to sorts
+/places/{name}/guides.json => Depricated, use /places/{name}.json
+/guides/version.json => Similar to sorts
+/tips.json => Not changed
+
+API to add:
+mapku_places
+  Get information for a single page.
+  Need to query the Category with the same name of the place,
+  and process the place page, guide pages and image pages separatly.
+  Another query to get Categories on the place page.(?)
+mapku_search?text=&page=
+  Directly use Search API.
+  https://www.mediawiki.org/wiki/API:Search
+mapku_image?title=
+  Directly use Query API.
+  action=query&titles=Image:xxx.jpg&prop=imageinfo&iiprop=url
+mapku_sorts
+  Ask for Pages under the Category used for these sorts, and find out [[Parent::]]
+mapku_autocomplete?text=
+  Directly use OpenSearch api.
+mapku_sortver?ver=
+  Ask for Pages like mapku_sorts, and find out the Modification date
+  and then compare with the version given.
+  For every entry that is too old, ask for its information as mapku_place does.
+mapku_placever?ver=
+  Similar to mapku_sortver.
+mapku_guideofplace?title=
+  Similar to mapku_place and only return guides.
+mapku_guidever?ver=
+  Similar to mapku_sortver.
+mapku_tips
+  Use similar method as [https://www.mediawiki.org/wiki/Extension:EditPageTrick].

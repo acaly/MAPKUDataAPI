@@ -13,6 +13,11 @@ $wgExtensionCredits['semantic'][] = array(
 );
 
 $dir = __DIR__ . '/';
+$apiDir = $dir . 'includes/api/';
+
 $wgExtensionMessagesFiles['MAPKUDataAPI'] = $dir . 'MAPKUDataAPI.i18n.php';
-$wgAutoloadClasses['PlaceJsonPrinter'] = $dir . 'queryprinter/PlaceJsonPrinter.php';
-$smwgResultFormats['jsonplace'] = 'PlaceJsonPrinter';
+
+$wgAutoloadClasses['PlaceSerializer'] = $dir . 'includes/PlaceSerializer.php';
+$wgAutoloadClasses['ApiAllPlaces'] = $apiDir . 'ApiAllPlaces.php';
+
+$wgAPIModules['allplaces'] = 'ApiAllPlaces';
