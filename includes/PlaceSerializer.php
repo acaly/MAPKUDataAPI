@@ -85,6 +85,7 @@ class PlaceSerializer {
             $printRequest
           );
         } else if ( $printRequest->getLabel() === self::getPropertyBaiduCoord()) {
+//$result['test'] = gettype($resultArray->getContent());continue;
           $coord = self::getSerialization(
             $resultArray->getContent()[0],
             $printRequest
@@ -92,6 +93,7 @@ class PlaceSerializer {
           $result['baidu_lati'] = $coord['lat'];
           $result['baidu_longi'] = $coord['lon'];
         } else if ( $printRequest->getLabel() === self::getPropertyGoogleCoord()) {
+//continue;
           $coord = self::getSerialization(
             $resultArray->getContent()[0],
             $printRequest
