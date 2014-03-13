@@ -10,6 +10,7 @@ class PlaceSerializer {
   public static $prop_baidu;
   public static $prop_google;
   public static $prop_cat;
+  public static $prop_mainimg;
   public static $cat_guide;
 
   public static function initStrings() {
@@ -17,6 +18,7 @@ class PlaceSerializer {
     self::$prop_baidu = wfMessage('mapkuprop-baidu')->text();
     self::$prop_google = wfMessage('mapkuprop-google')->text();
     self::$prop_cat = wfMessage('mapkuprop-category')->text();
+    self::$prop_mainimg = wfMessage('mapkuprop-mainimg' )->text();
     self::$cat_guide = wfMessage('mapkucat-guide')->text();
   }
 
@@ -66,6 +68,10 @@ class PlaceSerializer {
     return $result;
   }
 
+  private static function getImageThumbUrl($title, $imgsize) {
+    return wfExpandUrl(wfFindFile($title)->createThumb($imgsize), PROTO_RELATIVE);
+  }
+
   public static function getPlaceCategoryContent($name, & $result, $imgsize) {
     $result['images'] = array();
     $result['guides'] = array();
@@ -92,9 +98,8 @@ class PlaceSerializer {
     foreach ( $queryResult->getResults() as $diWikiPage ) {
       if ( ($diWikiPage->getNamespace() === NS_FILE ) ) {
         //an image.
-        $image = wfFindFile($diWikiPage->getTitle()->getText());
 
-        $result['images'][] = wfExpandUrl($image->createThumb($imgsize), PROTO_RELATIVE);
+        $result['images'][] = self::getImageThumbUrl($diWikiPage->getTitle()->getText());
       } else {
         //check if there is a category named guides
         $resultArray = new SMWResultArray( $diWikiPage, $printRequest, $queryResult->getStore() );
@@ -187,6 +192,8 @@ class PlaceSerializer {
             }
           }
           $result['sorts'] = $values;
+        } else if ( $printRequest->getLabel() === self::$prop_mainimg) {
+          $result['image'] = $dataItem->getTitle()->getFullText();
         }
       }
       $resultList->addValue(null, null, $result);

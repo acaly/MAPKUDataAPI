@@ -16,4 +16,5 @@ $messages['zh-cn'] = array(
   'mapkuprop-baidu' => 'Baidu经纬度',
   'mapkuprop-google' => 'Google经纬度',
   'mapkuprop-category' => '分类',
+  'mapkuprop-mainimg' => '条目图片',
 );
