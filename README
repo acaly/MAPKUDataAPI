@@ -5,6 +5,9 @@ API changes:
 1. for place
 * removed: 'tags', 'remarks', 'description', 'email', 'tel', 'opening_hours'
 * another query: 'guide_ids', 'img_count', 'sort_ids',
+* 'sort_ids' -> 'sorts', list of sorts(title)
+* 'img_count' -> 'images', list of url
+* 'guide_ids' -> 'guides', list of guide(title)
 
 Original API:
 /places/:id.json

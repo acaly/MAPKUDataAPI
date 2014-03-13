@@ -7,18 +7,11 @@ use SMW\ExtensionContext;
 class PlaceSerializer {
   private static $sortList = null;
 
-  public static function getPropertyAddress() {
-    return wfMessage('mapkuprop-address')->text();
-  }
-  public static function getPropertyBaiduCoord() {
-    return wfMessage('mapkuprop-baidu')->text();
-  }
-  public static function getPropertyGoogleCoord() {
-    return wfMessage('mapkuprop-google')->text();
-  }
-  public static function getPropertyCategory() {
-    return wfMessage('mapkuprop-category')->text();
-  }
+  public static $prop_addr = wfMessage('mapkuprop-address')->text();
+  public static $prop_baidu = wfMessage('mapkuprop-baidu')->text();
+  public static $prop_google = wfMessage('mapkuprop-google')->text();
+  public static $prop_cat = wfMessage('mapkuprop-category')->text();
+  public static $cat_guide = wfMessage('mapkucat-guide')->text();
 
   public static function getSerialization( $dataItem, $printRequest = null ) {
     $result = array();
@@ -66,8 +59,42 @@ class PlaceSerializer {
     return $result;
   }
 
-  public static function getImagesOfPlace($name) {
+  public static function getPlaceCategoryContent($name, & $result) {
+    $result['images'] = array();
+    $result['guides'] = array();
+    list( $queryString, $parameters, $printouts ) = 
+        SMWQueryProcessor::getComponentsFromFunctionParams(
+          array(
+            '[[Category:' . $name . ']]',
+            '?' . self::$prop_cat,
+          ),
+          false
+        );
 
+    $content = new ExtensionContext();
+    $queryResult = $content->getStore()->getQueryResult( SMWQueryProcessor::createQuery(
+      $queryString,
+      SMWQueryProcessor::getProcessedParams( $parameters, $printouts ),
+      SMWQueryProcessor::SPECIAL_PAGE,
+      '',
+      $printouts
+    ) );
+
+    //There is the place page, images, guides, and maybe some other things.
+    $printRequest = $queryResult->getPrintRequests()[0]; //category
+    foreach ( $queryResult->getResults() as $diWikiPage ) {
+      if ( ($diWikiPage->getNamespace() === NS_FILE ) ) {
+        //an image.
+        $result['images'][] = $diWikiPage->getTitle()->getFullUrl();
+      } else {
+        //check if there is a category named guides
+        $resultArray = new SMWResultArray( $diWikiPage, $printRequest, $queryResult->getStore() );
+        foreach ( $resultArray->getContent() as $dataItem ) {
+          if ( explode(':', $dataItem->getTitle()->getFullText())[1] === self::$cat_guide)
+            $result['guides'][] = $diWikiPage->getTitle()->getText();
+        }
+      }
+    }
   }
 
   public static function initSortList() {
@@ -82,7 +109,6 @@ class PlaceSerializer {
           false
         );
 
-    //$queryResult = $this->getQueryResult( $this->getQuery(
     $content = new ExtensionContext();
     $queryResult = $content->getStore()->getQueryResult( SMWQueryProcessor::createQuery(
       $queryString,
@@ -120,28 +146,30 @@ class PlaceSerializer {
         'name' => $diWikiPage->getTitle()->getText(),
       );
 
+      self::getPlaceCategoryContent($result['name'], $result);
+
       foreach ( $queryResult->getPrintRequests() as $printRequest ) {
         $resultArray = new SMWResultArray( $diWikiPage, $printRequest, $queryResult->getStore() );
-        if ( $printRequest->getLabel() === self::getPropertyAddress()) {
+        if ( $printRequest->getLabel() === self::$prop_addr) {
           $result['addr'] = self::getSerialization(
             $resultArray->getContent()[0],
             $printRequest
           );
-        } else if ( $printRequest->getLabel() === self::getPropertyBaiduCoord()) {
+        } else if ( $printRequest->getLabel() === self::$prop_baidu) {
           $coord = self::getSerialization(
             $resultArray->getContent()[0],
             $printRequest
           );
           $result['baidu_lati'] = $coord['lat'];
           $result['baidu_longi'] = $coord['lon'];
-        } else if ( $printRequest->getLabel() === self::getPropertyGoogleCoord()) {
+        } else if ( $printRequest->getLabel() === self::$prop_google) {
           $coord = self::getSerialization(
             $resultArray->getContent()[0],
             $printRequest
           );
           $result['google_lati'] = $coord['lat'];
           $result['google_longi'] = $coord['lon'];
-        } else if ( $printRequest->getLabel() === self::getPropertyCategory()) {
+        } else if ( $printRequest->getLabel() === self::$prop_cat) {
           $values = array();
           foreach ( $resultArray->getContent() as $dataItem ) {
             $sort_title = explode(':', $dataItem->getTitle()->getFullText())[1];

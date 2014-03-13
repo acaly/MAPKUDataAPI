@@ -9,6 +9,7 @@ $messages['zh-cn'] = array(
   //Name of Categories
   'mapku-cat' => '导出到数据接口',
   'mapku-cat-sort' => '按功能分类',
+  'mapkucat-guide' => '攻略',
 
   //Property name
   'mapkuprop-address' => '地理位置',

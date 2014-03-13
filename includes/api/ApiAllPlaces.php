@@ -51,10 +51,10 @@ class ApiAllPlaces extends Query {
         SMWQueryProcessor::getComponentsFromFunctionParams(
           array(
             '[[Category:' . $cat . ']]',
-            '?' . PlaceSerializer::getPropertyAddress(),
-            '?' . PlaceSerializer::getPropertyBaiduCoord(),
-            '?' . PlaceSerializer::getPropertyGoogleCoord(),
-            '?' . PlaceSerializer::getPropertyCategory(),
+            '?' . PlaceSerializer::$prop_addr,
+            '?' . PlaceSerializer::$prop_baidu,
+            '?' . PlaceSerializer::$prop_google,
+            '?' . PlaceSerializer::$prop_cat,
             'link=none'
           ),
           false
