@@ -6,8 +6,9 @@ $messages['zh-cn'] = array(
   'mapkudataapi-desc' => '为Semantic Mediawiki提供新的Json格式作为移动端的数据接口',
   'mapkudataapi-placejson' => '导出为针对地点的简洁JSON',
 
-  //Name of the Category in which places will be exported
-  'output_to_api' => '导出到数据接口',
+  //Name of Categories
+  'mapku-cat' => '导出到数据接口',
+  'mapku-cat-sort' => '按功能分类',
 
   //Property name
   'mapkuprop-address' => '地理位置',

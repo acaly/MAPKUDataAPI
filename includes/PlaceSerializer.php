@@ -71,6 +71,24 @@ class PlaceSerializer {
   public static function initSortList() {
     $sortList = array();
     
+    $cat = wfMessage('mapku-cat-sort')->text();
+    list( $queryString, $parameters, $printouts ) = 
+        SMWQueryProcessor::getComponentsFromFunctionParams(
+          array(
+            '[[Subcategory of::' . $cat . ']]'
+          ),
+          false
+        );
+
+    $queryResult = $this->getQueryResult( $this->getQuery(
+      $queryString,
+      $printouts,
+      $parameters
+    ) );
+    
+    foreach ( $queryResult->getResults() as $diWikiPage ) {
+      $sortList[] = $diWikiPage->getTitle()->getText();
+    }
   }
 
   public static function isCategoryPlaceSort($name) {

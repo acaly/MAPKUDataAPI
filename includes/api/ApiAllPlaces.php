@@ -30,7 +30,7 @@ class ApiAllPlaces extends Query {
    * @return void
    */
   private function run( $resultPageSet = null ) {
-    $cat = wfMessage('output_to_api')->text();
+    $cat = wfMessage('mapku-cat')->text();
     list( $queryString, $parameters, $printouts ) = 
         SMWQueryProcessor::getComponentsFromFunctionParams(
           array(
