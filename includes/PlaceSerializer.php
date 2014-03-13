@@ -95,13 +95,14 @@ class PlaceSerializer {
     foreach ( $queryResult->getResults() as $diWikiPage ) {
       $sortList[] = $diWikiPage->getTitle()->getText();
     }
+    self::$sortList = $sortList;
   }
 
   public static function isCategoryPlaceSort($name) {
-    if ($sortList == null) {
+    if (self::$sortList === null) {
       self::initSortList();
     }
-    return in_array($name, $sortList);
+    return in_array($name, self::$sortList);
   }
 
   public static function serializePlaceArray($queryResult, $resultList) {
@@ -143,8 +144,9 @@ class PlaceSerializer {
         } else if ( $printRequest->getLabel() === self::getPropertyCategory()) {
           $values = array();
           foreach ( $resultArray->getContent() as $dataItem ) {
-            if ( self::isCategoryPlaceSort( $dataItem ) ) {
-              $values[] = explode(":", $dataItem->getTitle()->getFullText())[1];
+            $sort_title = explode(':', $dataItem->getTitle()->getFullText())[1];
+            if ( self::isCategoryPlaceSort( $sort_title ) ) {
+              $values[] = $sort_title;
             }
           }
           $result['sorts'] = $values;
