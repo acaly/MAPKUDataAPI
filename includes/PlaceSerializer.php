@@ -92,7 +92,13 @@ class PlaceSerializer {
     foreach ( $queryResult->getResults() as $diWikiPage ) {
       if ( ($diWikiPage->getNamespace() === NS_FILE ) ) {
         //an image.
-        $result['images'][] = $diWikiPage->getTitle()->getFullUrl();
+        $image = wfFindFile($diWikiPage->getTitle()->getText());
+
+        $result['images'][] = array(
+          wfExpandUrl($image->createThumb(120), PROTO_RELATIVE),
+          wfExpandUrl($image->createThumb(180), PROTO_RELATIVE),
+          wfExpandUrl($image->createThumb(300), PROTO_RELATIVE),
+        );
       } else {
         //check if there is a category named guides
         $resultArray = new SMWResultArray( $diWikiPage, $printRequest, $queryResult->getStore() );
