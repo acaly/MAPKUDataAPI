@@ -3,6 +3,8 @@ use SMW\Serializers\QueryResultSerializer;
 use SMWDataItem as DataItem;
 
 class PlaceSerializer {
+  private static $sortList = null;
+
   public static function getPropertyAddress() {
     return wfMessage('mapkuprop-address')->text();
   }
@@ -66,7 +68,17 @@ class PlaceSerializer {
 
   }
 
-  public static 
+  public static function initSortList() {
+    $sortList = array();
+    
+  }
+
+  public static function isCategoryPlaceSort($name) {
+    if ($sortList == null) {
+      self::initSortList();
+    }
+    return in_array($name, $sortList);
+  }
 
   public static function serializePlaceArray($queryResult, $resultList) {
 
@@ -105,11 +117,13 @@ class PlaceSerializer {
           $result['google_lati'] = $coord['lat'];
           $result['google_longi'] = $coord['lon'];
         } else if ( $printRequest->getLabel() === self::getPropertyCategory()) {
-          $coord = self::getSerialization(
-            $resultArray->getContent()[0],
-            $printRequest
-          );
-          $result['sorts'] = $coord;
+          $values = array();
+          foreach ( $resultArray->getContent() as $dataItem ) {
+            if ( self::isCategoryPlaceSort( $dataItem ) ) {
+              $values[] = explode(":", $dataItem->getTitle()->getFullText())[1];
+            }
+          }
+          $result['sorts'] = $values;
         }
       }
       $resultList->addValue(null, null, $result);
