@@ -1,6 +1,8 @@
 <?php
 use SMW\Serializers\QueryResultSerializer;
 use SMWDataItem as DataItem;
+use SMWQueryProcessor;
+use SMW\ExtensionContext;
 
 class PlaceSerializer {
   private static $sortList = null;
@@ -80,12 +82,16 @@ class PlaceSerializer {
           false
         );
 
-    $queryResult = $this->getQueryResult( $this->getQuery(
+    //$queryResult = $this->getQueryResult( $this->getQuery(
+    $content = new ExtensionContext();
+    $queryResult = $content->getStore()->getQueryResult( SMWQueryProcessor::createQuery(
       $queryString,
-      $printouts,
-      $parameters
+      SMWQueryProcessor::getProcessedParams( $parameters, $printouts ),
+      SMWQueryProcessor::SPECIAL_PAGE,
+      '',
+      $printouts
     ) );
-    
+
     foreach ( $queryResult->getResults() as $diWikiPage ) {
       $sortList[] = $diWikiPage->getTitle()->getText();
     }
