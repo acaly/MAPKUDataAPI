@@ -1,7 +1,6 @@
 <?php
 use SMW\Serializers\QueryResultSerializer;
 use SMWDataItem as DataItem;
-use SMWQueryProcessor;
 use SMW\ExtensionContext;
 
 class PlaceSerializer {
@@ -14,11 +13,11 @@ class PlaceSerializer {
   public static $cat_guide;
 
   public static function initStrings() {
-    $prop_addr = wfMessage('mapkuprop-address')->text();
-    $prop_baidu = wfMessage('mapkuprop-baidu')->text();
-    $prop_google = wfMessage('mapkuprop-google')->text();
-    $prop_cat = wfMessage('mapkuprop-category')->text();
-    $cat_guide = wfMessage('mapkucat-guide')->text();
+    self::$prop_addr = wfMessage('mapkuprop-address')->text();
+    self::$prop_baidu = wfMessage('mapkuprop-baidu')->text();
+    self::$prop_google = wfMessage('mapkuprop-google')->text();
+    self::$prop_cat = wfMessage('mapkuprop-category')->text();
+    self::$cat_guide = wfMessage('mapkucat-guide')->text();
   }
 
   public static function getSerialization( $dataItem, $printRequest = null ) {
