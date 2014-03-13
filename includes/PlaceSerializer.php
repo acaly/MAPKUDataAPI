@@ -12,6 +12,9 @@ class PlaceSerializer {
   public static function getPropertyGoogleCoord() {
     return wfMessage('mapkuprop-google')->text();
   }
+  public static function getPropertyCategory() {
+    return wfMessage('mapkuprop-category')->text();
+  }
 
   public static function getSerialization( $dataItem, $printRequest = null ) {
     $result = array();
@@ -59,6 +62,12 @@ class PlaceSerializer {
     return $result;
   }
 
+  public static function getImagesOfPlace($name) {
+
+  }
+
+  public static 
+
   public static function serializePlaceArray($queryResult, $resultList) {
 
     foreach ( $queryResult->getResults() as $diWikiPage ) {
@@ -76,15 +85,12 @@ class PlaceSerializer {
 
       foreach ( $queryResult->getPrintRequests() as $printRequest ) {
         $resultArray = new SMWResultArray( $diWikiPage, $printRequest, $queryResult->getStore() );
-        //$dataItems = $resultArray->getContent();
-
         if ( $printRequest->getLabel() === self::getPropertyAddress()) {
           $result['addr'] = self::getSerialization(
             $resultArray->getContent()[0],
             $printRequest
           );
         } else if ( $printRequest->getLabel() === self::getPropertyBaiduCoord()) {
-//$result['test'] = gettype($resultArray->getContent());continue;
           $coord = self::getSerialization(
             $resultArray->getContent()[0],
             $printRequest
@@ -92,13 +98,18 @@ class PlaceSerializer {
           $result['baidu_lati'] = $coord['lat'];
           $result['baidu_longi'] = $coord['lon'];
         } else if ( $printRequest->getLabel() === self::getPropertyGoogleCoord()) {
-//continue;
           $coord = self::getSerialization(
             $resultArray->getContent()[0],
             $printRequest
           );
           $result['google_lati'] = $coord['lat'];
           $result['google_longi'] = $coord['lon'];
+        } else if ( $printRequest->getLabel() === self::getPropertyCategory()) {
+          $coord = self::getSerialization(
+            $resultArray->getContent()[0],
+            $printRequest
+          );
+          $result['sorts'] = $coord;
         }
       }
       $resultList->addValue(null, null, $result);

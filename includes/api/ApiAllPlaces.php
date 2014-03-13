@@ -38,6 +38,7 @@ class ApiAllPlaces extends Query {
             '?' . PlaceSerializer::getPropertyAddress(),
             '?' . PlaceSerializer::getPropertyBaiduCoord(),
             '?' . PlaceSerializer::getPropertyGoogleCoord(),
+            '?' . PlaceSerializer::getPropertyCategory(),
             'link=none'
           ),
           false

@@ -13,4 +13,5 @@ $messages['zh-cn'] = array(
   'mapkuprop-address' => '地理位置',
   'mapkuprop-baidu' => 'Baidu经纬度',
   'mapkuprop-google' => 'Google经纬度',
+  'mapkuprop-category' => '分类',
 );
