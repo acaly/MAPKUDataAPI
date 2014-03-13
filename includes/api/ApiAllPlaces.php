@@ -65,7 +65,21 @@ class ApiAllPlaces extends Query {
       $printouts,
       $parameters
     ) );
-    PlaceSerializer::serializePlaceArray($queryResult, $this->getResult());
+
+    $imgsize = $this->extractRequestParams()['imgsize'];
+    switch ($imgsize) {
+      case 'l':
+        $imgsize = 480;
+        break;
+      case 'm':
+        $imgsize = 240;
+        break;
+      case 's':
+        $imgsize = 120;
+        break;
+    }
+
+    PlaceSerializer::serializePlaceArray($queryResult, $this->getResult(), $imgsize);
   }
 
   public function getAllowedParams() {
@@ -73,12 +87,19 @@ class ApiAllPlaces extends Query {
       'format' => array(
         ApiBase::PARAM_DFLT => 'json',
         ApiBase::PARAM_TYPE => array( 'json', 'jsonfm' ),
-      )
+      ),
+      'imgsize' => array(
+        ApiBase::PARAM_DFLT => 'm',
+        ApiBase::PARAM_TYPE => array( 's', 'm', 'l' ),
+      ),
     );
   }
 
   public function getParamDescription() {
-    return array();
+    return array(
+      'format' => 'Output format, only json and jsonfm are allowed.',
+      'imgsize' => 'Size of the image url returned. The default is m(middle).',
+    );
   }
 
   public function getResultProperties() {

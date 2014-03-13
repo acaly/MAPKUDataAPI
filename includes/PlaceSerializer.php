@@ -66,7 +66,7 @@ class PlaceSerializer {
     return $result;
   }
 
-  public static function getPlaceCategoryContent($name, & $result) {
+  public static function getPlaceCategoryContent($name, & $result, $imgsize) {
     $result['images'] = array();
     $result['guides'] = array();
     list( $queryString, $parameters, $printouts ) = 
@@ -94,11 +94,7 @@ class PlaceSerializer {
         //an image.
         $image = wfFindFile($diWikiPage->getTitle()->getText());
 
-        $result['images'][] = array(
-          wfExpandUrl($image->createThumb(120), PROTO_RELATIVE),
-          wfExpandUrl($image->createThumb(180), PROTO_RELATIVE),
-          wfExpandUrl($image->createThumb(300), PROTO_RELATIVE),
-        );
+        $result['images'][] = wfExpandUrl($image->createThumb($imgsize), PROTO_RELATIVE);
       } else {
         //check if there is a category named guides
         $resultArray = new SMWResultArray( $diWikiPage, $printRequest, $queryResult->getStore() );
@@ -144,7 +140,7 @@ class PlaceSerializer {
     return in_array($name, self::$sortList);
   }
 
-  public static function serializePlaceArray($queryResult, $resultList) {
+  public static function serializePlaceArray($queryResult, $resultList, $imgsize) {
 
     foreach ( $queryResult->getResults() as $diWikiPage ) {
       if ( !($diWikiPage->getTitle() instanceof Title ) ) {
@@ -159,7 +155,7 @@ class PlaceSerializer {
         'name' => $diWikiPage->getTitle()->getText(),
       );
 
-      self::getPlaceCategoryContent($result['name'], $result);
+      self::getPlaceCategoryContent($result['name'], $result, $imgsize);
 
       foreach ( $queryResult->getPrintRequests() as $printRequest ) {
         $resultArray = new SMWResultArray( $diWikiPage, $printRequest, $queryResult->getStore() );
