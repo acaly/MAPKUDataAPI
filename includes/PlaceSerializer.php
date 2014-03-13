@@ -7,11 +7,19 @@ use SMW\ExtensionContext;
 class PlaceSerializer {
   private static $sortList = null;
 
-  public static $prop_addr = wfMessage('mapkuprop-address')->text();
-  public static $prop_baidu = wfMessage('mapkuprop-baidu')->text();
-  public static $prop_google = wfMessage('mapkuprop-google')->text();
-  public static $prop_cat = wfMessage('mapkuprop-category')->text();
-  public static $cat_guide = wfMessage('mapkucat-guide')->text();
+  public static $prop_addr;
+  public static $prop_baidu;
+  public static $prop_google;
+  public static $prop_cat;
+  public static $cat_guide;
+
+  public static function initStrings() {
+    $prop_addr = wfMessage('mapkuprop-address')->text();
+    $prop_baidu = wfMessage('mapkuprop-baidu')->text();
+    $prop_google = wfMessage('mapkuprop-google')->text();
+    $prop_cat = wfMessage('mapkuprop-category')->text();
+    $cat_guide = wfMessage('mapkucat-guide')->text();
+  }
 
   public static function getSerialization( $dataItem, $printRequest = null ) {
     $result = array();
@@ -184,3 +192,5 @@ class PlaceSerializer {
     }
   }
 }
+
+PlaceSerializer::initStrings();
