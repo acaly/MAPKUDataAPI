@@ -55,6 +55,7 @@ class ApiAllPlaces extends Query {
             '?' . PlaceSerializer::$prop_baidu,
             '?' . PlaceSerializer::$prop_google,
             '?' . PlaceSerializer::$prop_cat,
+            '?' . PlaceSerializer::$prop_mainimg,
             'link=none'
           ),
           false

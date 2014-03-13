@@ -69,7 +69,12 @@ class PlaceSerializer {
   }
 
   private static function getImageThumbUrl($title, $imgsize) {
-    return wfExpandUrl(wfFindFile($title)->createThumb($imgsize), PROTO_RELATIVE);
+    $file = wfFindFile($title);
+    if ($file != null) {
+      return wfExpandUrl($file->createThumb($imgsize), PROTO_RELATIVE);
+    } else {
+      return "";
+    }
   }
 
   public static function getPlaceCategoryContent($name, & $result, $imgsize) {
@@ -99,7 +104,7 @@ class PlaceSerializer {
       if ( ($diWikiPage->getNamespace() === NS_FILE ) ) {
         //an image.
 
-        $result['images'][] = self::getImageThumbUrl($diWikiPage->getTitle()->getText());
+        $result['images'][] = self::getImageThumbUrl($diWikiPage->getTitle()->getText(), $imgsize);
       } else {
         //check if there is a category named guides
         $resultArray = new SMWResultArray( $diWikiPage, $printRequest, $queryResult->getStore() );
@@ -156,11 +161,9 @@ class PlaceSerializer {
       }
 
       $result = array(
-        '_id' => $diWikiPage->getDBkey(),
+//        '_id' => $diWikiPage->getDBkey(),
         'name' => $diWikiPage->getTitle()->getText(),
       );
-
-      self::getPlaceCategoryContent($result['name'], $result, $imgsize);
 
       foreach ( $queryResult->getPrintRequests() as $printRequest ) {
         $resultArray = new SMWResultArray( $diWikiPage, $printRequest, $queryResult->getStore() );
@@ -193,9 +196,15 @@ class PlaceSerializer {
           }
           $result['sorts'] = $values;
         } else if ( $printRequest->getLabel() === self::$prop_mainimg) {
-          $result['image'] = $dataItem->getTitle()->getFullText();
+          $dataItem = $resultArray->getContent()[0];
+          if ($dataItem !== null) {
+            $result['image'] = self::getImageThumbUrl($dataItem->getTitle()->getText(), $imgsize);
+          } else {
+            $result['image'] = '';
+          }
         }
       }
+      self::getPlaceCategoryContent($result['name'], $result, $imgsize);
       $resultList->addValue(null, null, $result);
     }
   }
