@@ -20,7 +20,7 @@ class ApiAllPlaces extends Query {
     }
     return $this->getMain()->createPrinterByName( $allowed[0] );
   }
-  
+
   public function execute() {
     $this->run();
   }
@@ -69,7 +69,12 @@ class ApiAllPlaces extends Query {
   }
 
   public function getAllowedParams() {
-    return array();
+    return array(
+      'format' => array(
+        ApiBase::PARAM_DFLT => 'json',
+        ApiBase::PARAM_TYPE => array( 'json', 'jsonfm' ),
+      )
+    );
   }
 
   public function getParamDescription() {

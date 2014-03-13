@@ -88,7 +88,12 @@ class ApiAllSorts extends Query {
   }
 
   public function getAllowedParams() {
-    return array();
+    return array(
+      'format' => array(
+        ApiBase::PARAM_DFLT => 'json',
+        ApiBase::PARAM_TYPE => array( 'json', 'jsonfm' ),
+      )
+    );
   }
 
   public function getParamDescription() {
