@@ -6,7 +6,7 @@ API changes:
 * removed: 'tags', 'remarks', 'description', 'email', 'tel', 'opening_hours'
 * another query: 'guide_ids', 'img_count', 'sort_ids',
 * 'sort_ids' -> 'sorts', list of sorts(title)
-* 'img_count' -> 'images', list of url
+* 'img_count' -> 'images', list of images(title, not url)
 * 'guide_ids' -> 'guides', list of guide(title)
 
 Original API:
@@ -34,18 +34,18 @@ New API:
 /tips.json => Not changed
 
 API to add:
-mapku_places
+mapku_allplaces
   Get information for a single page.
   Need to query the Category with the same name of the place,
   and process the place page, guide pages and image pages separatly.
   Another query to get Categories on the place page.(?)
-mapku_search?text=&page=
+mapku_searchplace?text=&page=
   Directly use Search API.
   https://www.mediawiki.org/wiki/API:Search
-mapku_image?title=
+mapku_imageurl?title=
   Directly use Query API.
   action=query&titles=Image:xxx.jpg&prop=imageinfo&iiprop=url
-mapku_sorts
+mapku_allsorts
   Ask for Pages under the Category used for these sorts, and find out [[Parent::]]
 mapku_autocomplete?text=
   Directly use OpenSearch api.
@@ -55,8 +55,6 @@ mapku_sortver?ver=
   For every entry that is too old, ask for its information as mapku_place does.
 mapku_placever?ver=
   Similar to mapku_sortver.
-mapku_guideofplace?title=
-  Similar to mapku_place and only return guides.
 mapku_guidever?ver=
   Similar to mapku_sortver.
 mapku_tips
