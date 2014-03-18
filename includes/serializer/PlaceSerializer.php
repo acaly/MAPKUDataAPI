@@ -98,6 +98,7 @@ class PlaceSerializer {
           $result['google_lati'] = $coord['lat'];
           $result['google_longi'] = $coord['lon'];
         } else if ( $printRequest->getLabel() === $wgMAPKUDataAPIStr['prop_cat']) {
+          $result['sorts'] = array();
           foreach ( $resultArray->getContent() as $dataItem ) {
             if ($dataItem->getTitle()->isKnown()) {
               $result['sorts'][] = $dataItem->getTitle()->getFullText();
