@@ -3,11 +3,13 @@ Readme
 API changes:
 
 1. for place
-* removed: 'tags', 'remarks', 'description', 'email', 'tel', 'opening_hours'
-* another query: 'guide_ids', 'img_count', 'sort_ids',
+* removed: 'tags', 'remarks', 'description', 'email', 'tel', 'opening_hours', '_id'
+* another query: 'guide_ids', 'img_count'
 * 'sort_ids' -> 'sorts', list of sorts(title)
 * 'img_count' -> 'images', list of images(title, not url) & 'image', main image of the page
 * 'guide_ids' -> 'guides', list of guide(title)
+* !!!IMPORTANT!!!
+  images & guides are separated pages and changes can not be easily detected. so version api will no longer return images and guides. but main image will be returned for it's in the content page.
 
 Original API:
 /places/:id.json
@@ -35,18 +37,18 @@ New API:
 
 API to add:
 mapku_allplaces
-  Get information for a single page.
+  Get information for all places.
   Need to query the Category with the same name of the place,
   and process the place page, guide pages and image pages separatly.
   Another query to get Categories on the place page.(?)
-mapku_searchplace?text=&page=
-  Directly use Search API.
-  https://www.mediawiki.org/wiki/API:Search
-mapku_imageurl?title=
-  Directly use Query API.
-  action=query&titles=Image:xxx.jpg&prop=imageinfo&iiprop=url
 mapku_allsorts
   Ask for Pages under the Category used for these sorts, and find out [[Parent::]]
+mapku_placeinfo
+  Get the images and guides of the page.
+mapku_searchplace?text=
+mapku_searchguide?text=
+  Directly use Search API. Use '{{{XXXX' key word to just search within places or guides
+  https://www.mediawiki.org/wiki/API:Search
 mapku_autocomplete?text=
   Directly use OpenSearch api.
 mapku_sortver?ver=
