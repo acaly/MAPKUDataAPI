@@ -66,7 +66,7 @@ class PlaceSerializer {
       $printouts
     ) );
     foreach ( $queryResult->getResults() as $diWikiPage ) {
-      $result['images'][] = $diWikiPage->getTitle()->getText();
+      $result['images'][] = self::getImageThumbUrl($diWikiPage->getTitle()->getText(), $imgsize);
     }
   }
 
