@@ -46,9 +46,9 @@ mapku_allsorts
 mapku_placeinfo
   Get the images and guides of the page.
 mapku_searchplace?text=
-mapku_searchguide?text=
   Directly use Search API. Use '{{{XXXX' key word to just search within places or guides
   https://www.mediawiki.org/wiki/API:Search
+  return places and guides that match
 mapku_autocomplete?text=
   Directly use OpenSearch api.
 mapku_sortver?ver=
