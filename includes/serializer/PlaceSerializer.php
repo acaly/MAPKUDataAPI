@@ -2,78 +2,14 @@
 
 namespace MAPKU;
 
-use SMW\Serializers\QueryResultSerializer;
-use SMWDataItem as DataItem;
-use SMW\ExtensionContext;
 use Title;
 use SMWResultArray;
 use SMWQueryProcessor;
+use SMW\Serializers\QueryResultSerializer;
+use SMW\ExtensionContext;
+use SMWDataItem as DataItem;
 
 class PlaceSerializer {
-  # private static $sortList = null;
-
-  public static $prop_addr;
-  public static $prop_baidu;
-  public static $prop_google;
-  public static $prop_cat;
-  public static $prop_mainimg;
-  public static $cat_guide;
-
-  public static function initStrings() {
-    global $wgMAPKUDataAPIStr;
-    self::$prop_addr     = $wgMAPKUDataAPIStr('prop-address');
-    self::$prop_baidu    = $wgMAPKUDataAPIStr('prop-baidu');
-    self::$prop_google   = $wgMAPKUDataAPIStr('prop-google');
-    self::$prop_cat      = $wgMAPKUDataAPIStr('prop-category');
-    self::$prop_mainimg  = $wgMAPKUDataAPIStr('prop-mainimg' );
-    self::$cat_guide     = $wgMAPKUDataAPIStr('cat-guide');
-  }
-
-  public static function getSerialization( $dataItem, $printRequest = null ) {
-    $result = array();
-
-    switch ( $dataItem->getDIType() ) {
-      case DataItem::TYPE_WIKIPAGE:
-        $title = $dataItem->getTitle();
-        $result = array(
-          'fulltext' => $title->getFullText(),
-          'fullurl' => $title->getFullUrl(),
-          'namespace' => $title->getNamespace(),
-          'exists' => $title->isKnown()
-        );
-        break;
-      case DataItem::TYPE_NUMBER:
-        // dataitems and datavalues
-        // Quantity is a datavalue type that belongs to dataitem
-        // type number which means in order to identify the correct
-        // unit, we have re-factor the corresponding datavalue otherwise
-        // we will not be able to determine the unit
-        // (unit is part of the datavalue object)
-        if ( $printRequest !== null && $printRequest->getTypeID() === '_qty' ) {
-          $diProperty = $printRequest->getData()->getDataItem();
-          $dataValue = DataValueFactory::getInstance()->newDataItemValue( $dataItem, $diProperty );
-
-          $result = array(
-            'value' => $dataValue->getNumber(),
-            'unit' => $dataValue->getUnit()
-          );
-        } else {
-          $result = $dataItem->getNumber();
-        }
-        break;
-      case DataItem::TYPE_GEO:
-        $result = $dataItem->getCoordinateSet();
-        break;
-      case DataItem::TYPE_TIME:
-        $result = $dataItem->getMwTimestamp();
-        break;
-      default:
-        $result = $dataItem->getSerialization();
-        break;
-    }
-
-    return $result;
-  }
 
   private static function getImageThumbUrl($title, $imgsize) {
     $file = wfFindFile($title);
@@ -132,59 +68,6 @@ class PlaceSerializer {
     foreach ( $queryResult->getResults() as $diWikiPage ) {
       $result['images'][] = $diWikiPage->getTitle()->getText();
     }
-
-    return;
-    # Old code
-    //There is the place page, images, guides, and maybe some other things.
-    $printRequest = $queryResult->getPrintRequests()[0]; //category
-    foreach ( $queryResult->getResults() as $diWikiPage ) {
-      if ( ($diWikiPage->getNamespace() === NS_FILE ) ) {
-        //an image.
-
-        $result['images'][] = self::getImageThumbUrl($diWikiPage->getTitle()->getText(), $imgsize);
-      } else {
-        //check if there is a category named guides
-        $resultArray = new SMWResultArray( $diWikiPage, $printRequest, $queryResult->getStore() );
-        foreach ( $resultArray->getContent() as $dataItem ) {
-          if ( explode(':', $dataItem->getTitle()->getFullText())[1] === $wgMAPKUDataAPIStr['cat_guide'])
-            $result['guides'][] = $diWikiPage->getTitle()->getText();
-        }
-      }
-    }
-  }
-
-  public static function initSortList() {
-    $sortList = array();
-    
-    $cat = wfMessage('mapku-cat-sort')->text();
-    list( $queryString, $parameters, $printouts ) = 
-        SMWQueryProcessor::getComponentsFromFunctionParams(
-          array(
-            '[[Subcategory of::' . $cat . ']]'
-          ),
-          false
-        );
-
-    $content = new ExtensionContext();
-    $queryResult = $content->getStore()->getQueryResult( SMWQueryProcessor::createQuery(
-      $queryString,
-      SMWQueryProcessor::getProcessedParams( $parameters, $printouts ),
-      SMWQueryProcessor::SPECIAL_PAGE,
-      '',
-      $printouts
-    ) );
-
-    foreach ( $queryResult->getResults() as $diWikiPage ) {
-      $sortList[] = $diWikiPage->getTitle()->getText();
-    }
-    self::$sortList = $sortList;
-  }
-
-  public static function isCategoryPlaceSort($name) {
-    if (self::$sortList === null) {
-      self::initSortList();
-    }
-    return in_array($name, self::$sortList);
   }
 
   public static function serializePlaceArray($queryResult, $resultList, $imgsize) {
@@ -194,13 +77,11 @@ class PlaceSerializer {
       if ( !($diWikiPage->getTitle() instanceof Title ) ) {
         continue;
       }
-
       if ( ($diWikiPage->getNamespace() !== NS_MAIN ) ) {
         continue;
       }
 
       $result = array(
-//        '_id' => $diWikiPage->getDBkey(),
         'name' => $diWikiPage->getTitle()->getText(),
       );
 
@@ -218,10 +99,9 @@ class PlaceSerializer {
           $result['google_longi'] = $coord['lon'];
         } else if ( $printRequest->getLabel() === $wgMAPKUDataAPIStr['prop_cat']) {
           foreach ( $resultArray->getContent() as $dataItem ) {
-            //$sort_title = explode(':', $dataItem->getTitle()->getFullText())[1];
-            //if ( self::isCategoryPlaceSort( $sort_title ) ) {
-              $result['sorts'][] = $dataItem->getTitle()->getFullText();//$sort_title;
-            //}
+            if ($dataItem->getTitle()->isKnown()) {
+              $result['sorts'][] = $dataItem->getTitle()->getFullText();
+            }
           }
         } else if ( $printRequest->getLabel() === $wgMAPKUDataAPIStr['prop_mainimg']) {
           $dataItem = $resultArray->getContent()[0];
