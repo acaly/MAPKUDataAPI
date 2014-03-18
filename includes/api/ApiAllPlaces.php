@@ -2,15 +2,18 @@
 
 namespace MAPKU;
 
+use ApiBase;
+use SMWQueryProcessor;
+
 class ApiAllPlaces extends ApiDataBase {
 
   /**
    * @param $resultPageSet ApiPageSet
    * @return void
    */
-  private function run( $resultPageSet = null ) {
+  public function run( $resultPageSet = null ) {
     global $wgMAPKUDataAPIStr;
-    $cat = $wgMAPKUDataAPIStr['mapku-cat'];
+    $cat = $wgMAPKUDataAPIStr['cat_place'];
     list( $queryString, $parameters, $printouts ) = 
         SMWQueryProcessor::getComponentsFromFunctionParams(
           array(

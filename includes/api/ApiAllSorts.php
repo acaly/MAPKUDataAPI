@@ -2,13 +2,15 @@
 
 namespace MAPKU;
 
+use ApiBase;
+
 class ApiAllSorts extends ApiDataBase {
 
   /**
    * @param $resultPageSet ApiPageSet
    * @return void
    */
-  private function run( $resultPageSet = null ) {
+  public function run( $resultPageSet = null ) {
     $cat = wfMessage('mapku-cat-sort')->text();
     list( $queryString, $parameters, $printouts ) = 
         SMWQueryProcessor::getComponentsFromFunctionParams(

@@ -5,6 +5,9 @@ namespace MAPKU;
 use SMW\Serializers\QueryResultSerializer;
 use SMWDataItem as DataItem;
 use SMW\ExtensionContext;
+use Title;
+use SMWResultArray;
+use SMWQueryProcessor;
 
 class PlaceSerializer {
   # private static $sortList = null;
@@ -191,6 +194,7 @@ class PlaceSerializer {
       if ( !($diWikiPage->getTitle() instanceof Title ) ) {
         continue;
       }
+
       if ( ($diWikiPage->getNamespace() !== NS_MAIN ) ) {
         continue;
       }
