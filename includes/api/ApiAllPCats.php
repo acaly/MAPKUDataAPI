@@ -4,18 +4,20 @@ namespace MAPKU;
 
 use ApiBase;
 
-class ApiAllSorts extends ApiDataBase {
+class ApiAllPCatts extends ApiDataBase {
 
   /**
    * @param $resultPageSet ApiPageSet
    * @return void
    */
   public function run( $resultPageSet = null ) {
-    $cat = wfMessage('mapku-cat-sort')->text();
+    global $wgMAPKUDataAPIStr;
+    $cat = $wgMAPKUDataAPIStr['cat_sort'];
     list( $queryString, $parameters, $printouts ) = 
         SMWQueryProcessor::getComponentsFromFunctionParams(
           array(
-            '[[Subcategory of::' . $cat . ']]'
+            '[[Subcategory of::' . $cat . ']]',
+            '?' . $wgMAPKUDataAPIStr['prop_parent_pcat'],
           ),
           false
         );
@@ -26,30 +28,7 @@ class ApiAllSorts extends ApiDataBase {
       $parameters
     ) );
 
-    //TODO: output
-  }
-
-  public function getSortListForPlaceApi() {
-    $sortList = array();
-    $cat = wfMessage('mapku-cat-sort')->text();
-    list( $queryString, $parameters, $printouts ) = 
-        SMWQueryProcessor::getComponentsFromFunctionParams(
-          array(
-            '[[Subcategory of::' . $cat . ']]'
-          ),
-          false
-        );
-
-    $queryResult = $this->getQueryResult( $this->getQuery(
-      $queryString,
-      $printouts,
-      $parameters
-    ) );
-    
-    foreach ( $queryResult->getResults() as $diWikiPage ) {
-      $sortList[] = $diWikiPage->getTitle()->getText();
-    }
-    return $sortList;
+    SortSerializer::serializeSortArray($queryResult, $this->getResult());
   }
 
   public function getAllowedParams() {

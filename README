@@ -43,21 +43,32 @@ mapku_allplaces
   Another query to get Categories on the place page.(?)
 mapku_allsorts
   Ask for Pages under the Category used for these sorts, and find out [[Parent::]]
-mapku_placeinfo
-  Get the images and guides of the page.
 mapku_searchplace?text=
   Directly use Search API. Use '{{{XXXX' key word to just search within places or guides
   https://www.mediawiki.org/wiki/API:Search
   return places and guides that match
-mapku_autocomplete?text=
-  Directly use OpenSearch api.
-mapku_sortver?ver=
-  Ask for Pages like mapku_sorts, and find out the Modification date
+mapku_placever?ver=
+  Ask for Pages like mapku_allplacess, and find out the Modification date
   and then compare with the version given.
   For every entry that is too old, ask for its information as mapku_place does.
-mapku_placever?ver=
-  Similar to mapku_sortver.
 mapku_guidever?ver=
-  Similar to mapku_sortver.
+  Similar to mapku_placever.
 mapku_tips
   Use similar method as [https://www.mediawiki.org/wiki/Extension:EditPageTrick].
+
+Consts needed:
+prop_address
+prop_baidu
+prop_google
+prop_cat
+prop_mainimg
+prop_guide_parent_place
+prop_image_parent_place
+prop_parent_pcat
+
+cat_place
+cat_image
+cat_guide
+cat_sort
+
+array_allowed_pcat_parent

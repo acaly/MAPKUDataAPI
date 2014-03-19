@@ -28,7 +28,7 @@ $dir = __DIR__ . '/';
 $apiDir = $dir . 'includes/api/';
 $wgExtensionMessagesFiles['MAPKUDataAPI'] = $dir . 'MAPKUDataAPI.i18n.php';
 
-$wgAutoloadClasses['MAPKU\RemoveDetection'] = $dir . 'RemoveDetection.php';
+$wgAutoloadClasses['MAPKU\RemoveDetection'] = $dir . 'includes/RemoveDetection.php';
 
 $wgAutoloadClasses['MAPKU\PlaceSerializer'] = $dir . 'includes/serializer/PlaceSerializer.php';
 $wgAutoloadClasses['MAPKU\SortSerializer'] = $dir . 'includes/serializer/SortSerializer.php';
