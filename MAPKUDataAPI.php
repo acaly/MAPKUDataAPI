@@ -21,6 +21,7 @@ $wgHooks['CategoryAfterPageRemoved'][] = 'MAPKU\RemoveDetection::onCategoryAfter
 # api
 
 $wgAPIModules['allplaces'] = 'MAPKU\ApiAllPlaces';
+$wgAPIModules['allpcats'] = 'MAPKU\ApiAllPCats';
 
 # classes
 
@@ -35,7 +36,7 @@ $wgAutoloadClasses['MAPKU\SortSerializer'] = $dir . 'includes/serializer/SortSer
 
 $wgAutoloadClasses['MAPKU\ApiDataBase'] = $apiDir . 'ApiDataBase.php';
 $wgAutoloadClasses['MAPKU\ApiAllPlaces'] = $apiDir . 'ApiAllPlaces.php';
-$wgAutoloadClasses['MAPKU\ApiAllSorts'] = $apiDir . 'ApiAllSorts.php';
+$wgAutoloadClasses['MAPKU\ApiAllPCats'] = $apiDir . 'ApiAllPCats.php';
 
 
 

@@ -3,8 +3,9 @@
 namespace MAPKU;
 
 use ApiBase;
+use SMWQueryProcessor;
 
-class ApiAllPCatts extends ApiDataBase {
+class ApiAllPCats extends ApiDataBase {
 
   /**
    * @param $resultPageSet ApiPageSet
@@ -16,7 +17,7 @@ class ApiAllPCatts extends ApiDataBase {
     list( $queryString, $parameters, $printouts ) = 
         SMWQueryProcessor::getComponentsFromFunctionParams(
           array(
-            '[[Subcategory of::' . $cat . ']]',
+            '[[Category:' . $cat . ']]',
             '?' . $wgMAPKUDataAPIStr['prop_parent_pcat'],
           ),
           false

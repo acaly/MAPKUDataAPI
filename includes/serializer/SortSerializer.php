@@ -2,11 +2,14 @@
 
 namespace MAPKU;
 
+use Title;
+use SMWResultArray;
+
 class SortSerializer {
   public static function serializeSortArray($queryResult, $resultList) {
     global $wgMAPKUDataAPIStr;
 
-    $resultList->addValue(null, null, array('parents' => $wgMAPKUDataAPIStr['array_allowed_pcat_parent']))
+    $resultList->addValue(null, 'parents', $wgMAPKUDataAPIStr['array_allowed_pcat_parent']);
     $results = array();
 
     foreach ( $queryResult->getResults() as $diWikiPage ) {
@@ -29,6 +32,6 @@ class SortSerializer {
       }
       $results[] = $result;
     }
-    $resultList->addValue(null, null, $results);
+    $resultList->addValue(null, 'categories', $results);
   }
 }
