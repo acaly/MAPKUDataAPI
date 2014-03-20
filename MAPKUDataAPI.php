@@ -17,6 +17,7 @@ $wgExtensionCredits['semantic'][] = array(
 # hook
 
 $wgHooks['CategoryAfterPageRemoved'][] = 'MAPKU\RemoveDetection::onCategoryAfterPageRemoved';
+$wgHooks['ParserBeforeStrip'][] = 'MAPKU\SetPlaceDescription::onParserBeforeStrip';
 
 # api
 
@@ -30,6 +31,7 @@ $apiDir = $dir . 'includes/api/';
 $wgExtensionMessagesFiles['MAPKUDataAPI'] = $dir . 'MAPKUDataAPI.i18n.php';
 
 $wgAutoloadClasses['MAPKU\RemoveDetection'] = $dir . 'includes/RemoveDetection.php';
+$wgAutoloadClasses['MAPKU\SetPlaceDescription'] = $dir . 'includes/SetPlaceDescription.php';
 
 $wgAutoloadClasses['MAPKU\PlaceSerializer'] = $dir . 'includes/serializer/PlaceSerializer.php';
 $wgAutoloadClasses['MAPKU\SortSerializer'] = $dir . 'includes/serializer/SortSerializer.php';

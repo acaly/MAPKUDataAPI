@@ -64,7 +64,7 @@ prop_cat
 prop_mainimg
 prop_guide_parent_place
 prop_image_parent_place
-prop_parent_pcat
+array_allowed_pcat_parent
 
 cat_place
 cat_image
@@ -72,3 +72,9 @@ cat_guide
 cat_sort
 
 array_allowed_pcat_parent
+
+str_place_template_name
+
+regex:
+match place description(Template name is ABC, with 's' option)
+  \{\{ABC[^\{\}]*(\{([^\{\}]|(?1))*\})*\}\}\n?(([^=]=?)*[^=])==
