@@ -23,7 +23,9 @@ class ApiAllPlaces extends ApiDataBase {
             '?' . $wgMAPKUDataAPIStr['prop_google'],
             '?' . $wgMAPKUDataAPIStr['prop_cat'],
             '?' . $wgMAPKUDataAPIStr['prop_mainimg'],
-            'link=none'
+            '?' . $wgMAPKUDataAPIStr['prop_place_description'],
+            '?-'. $wgMAPKUDataAPIStr['prop_guide_parent_place'],
+            '?-'. $wgMAPKUDataAPIStr['prop_image_parent_place'],
           ),
           false
         );

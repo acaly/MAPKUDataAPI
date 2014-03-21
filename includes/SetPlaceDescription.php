@@ -10,9 +10,9 @@ class SetPlaceDescription {
     
     $reg = '/\{\{' .
         $wgMAPKUDataAPIStr['str_place_template_name'] .
-        '[^\{\}]*(\{([^\{\}]|(?1))*\})*\}\}\n?(([^=]=?)*[^=])==/s';
+        '[^\{\}]*(\{([^\{\}]|(?1))*\})*\}\}\n*(([^=]=?)*[^=])==/s';
 
-    preg_match($reg, $text, $match);
+    if ( preg_match($reg, $text, $match) !== 1 ) return;
 
     $description = preg_replace(
       array("/'/", "/{/", "/}/"),

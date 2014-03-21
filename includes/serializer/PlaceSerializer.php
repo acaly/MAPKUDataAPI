@@ -20,56 +20,6 @@ class PlaceSerializer {
     }
   }
 
-  public static function getPlaceCategoryContent($name, & $result, $imgsize) {
-    global $wgMAPKUDataAPIStr;
-    $result['images'] = array();
-    $result['guides'] = array();
-
-    # Guides
-    list( $queryString, $parameters, $printouts ) = 
-        SMWQueryProcessor::getComponentsFromFunctionParams(
-          array(
-            '[[' . $wgMAPKUDataAPIStr['prop_guide_parent_place'] . '::' . $name . ']]',
-            '[[Category:' . $wgMAPKUDataAPIStr['cat_guide'] . ']]'
-          ),
-          false
-        );
-
-    $content = new ExtensionContext();
-    $queryResult = $content->getStore()->getQueryResult( SMWQueryProcessor::createQuery(
-      $queryString,
-      SMWQueryProcessor::getProcessedParams( $parameters, $printouts ),
-      SMWQueryProcessor::SPECIAL_PAGE,
-      '',
-      $printouts
-    ) );
-    foreach ( $queryResult->getResults() as $diWikiPage ) {
-      $result['guides'][] = $diWikiPage->getTitle()->getText();
-    }
-
-    # Images
-    list( $queryString, $parameters, $printouts ) = 
-        SMWQueryProcessor::getComponentsFromFunctionParams(
-          array(
-            '[[' . $wgMAPKUDataAPIStr['prop_image_parent_place'] . '::' . $name . ']]',
-            '[[Category:' . $wgMAPKUDataAPIStr['cat_image'] . ']]'
-          ),
-          false
-        );
-
-    $content = new ExtensionContext();
-    $queryResult = $content->getStore()->getQueryResult( SMWQueryProcessor::createQuery(
-      $queryString,
-      SMWQueryProcessor::getProcessedParams( $parameters, $printouts ),
-      SMWQueryProcessor::SPECIAL_PAGE,
-      '',
-      $printouts
-    ) );
-    foreach ( $queryResult->getResults() as $diWikiPage ) {
-      $result['images'][] = self::getImageThumbUrl($diWikiPage->getTitle()->getText(), $imgsize);
-    }
-  }
-
   public static function serializePlaceArray($queryResult, $resultList, $imgsize) {
     global $wgMAPKUDataAPIStr;
 
@@ -88,7 +38,18 @@ class PlaceSerializer {
       foreach ( $queryResult->getPrintRequests() as $printRequest ) {
         $resultArray = new SMWResultArray( $diWikiPage, $printRequest, $queryResult->getStore() );
         if ( $printRequest->getLabel() === $wgMAPKUDataAPIStr['prop_addr']) {
-          $result['addr'] = $resultArray->getContent()[0]->getSerialization();
+$result['addr']=get_class_methods($resultArray->getContent()[0]);
+          $str = $resultArray->getContent()[0];
+          if ($str != null)
+            $result['addr'] = $str->getSerialization();
+          else
+            $result['addr'] = '';
+        } else if ( $printRequest->getLabel() === $wgMAPKUDataAPIStr['prop_place_description']) {
+          $str = $resultArray->getContent()[0];
+          if ($str != null)
+            $result['description'] = $str->getSerialization();
+          else
+            $result['description'] = '';
         } else if ( $printRequest->getLabel() === $wgMAPKUDataAPIStr['prop_baidu']) {
           $coord = $resultArray->getContent()[0]->getCoordinateSet();
           $result['baidu_lati'] = $coord['lat'];
@@ -111,9 +72,18 @@ class PlaceSerializer {
           } else {
             $result['image'] = '';
           }
+        } else if ( $printRequest->getLabel() === '-' . $wgMAPKUDataAPIStr['prop_guide_parent_place']) {
+          $result['guides'] = array();
+          foreach ( $resultArray->getContent() as $dataItem ) {
+            $result['guides'][] = $dataItem->getTitle()->getFullText();
+          }
+        } else if ( $printRequest->getLabel() === '-' . $wgMAPKUDataAPIStr['prop_image_parent_place']) {
+          $result['images'] = array();
+          foreach ( $resultArray->getContent() as $dataItem ) {
+            $result['images'][] = self::getImageThumbUrl($dataItem->getTitle()->getText(), $imgsize);
+          }
         }
       }
-      self::getPlaceCategoryContent($result['name'], $result, $imgsize);
       $resultList->addValue(null, null, $result);
     }
   }
