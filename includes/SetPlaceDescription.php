@@ -29,14 +29,14 @@ class SetPlaceDescription {
 
     if ( preg_match_all($reg_find_sub, $text, $matches) == FALSE ) return;
     foreach ( $matches[1] as $sub_place ) {
-      $reg_find_sub_des = '\n===? *' . $name . ' *===?\n*((=?[^=]+)*[^\n=])';
+      $reg_find_sub_des = '/\n===? *' . $sub_place . ' *===?\n*((=?[^=]+)*[^\n=])/s';
       if ( preg_match($reg_find_sub_des, $text, $match) !== 1 ) continue;
       $description = preg_replace(
         array("/'/", "/{/", "/}/"),
         "",
-        $match[3]
+        $match[1]
       );
-      $text = $text . "\n{{#subobject:" . $name . '|' . $wgMAPKUDataAPIStr['prop_place_description']
+      $text = $text . "\n{{#subobject:" . $sub_place . '|' . $wgMAPKUDataAPIStr['prop_place_description']
           . '=' . $description . '}}';
     }
   }
