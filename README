@@ -10,6 +10,8 @@ API changes:
 * 'guide_ids' -> 'guides', list of guide(title)
 * !!!IMPORTANT!!!
   images & guides are separated pages and changes can not be easily detected. so version api will no longer return images and guides. but main image will be returned for it's in the content page.
+  !!!CHANGED!!!
+  TODO: add a hook to detech page remove, save title of removed pages in a new table.
 
 Original API:
 /places/:id.json
@@ -57,13 +59,16 @@ mapku_tips
   Use similar method as [https://www.mediawiki.org/wiki/Extension:EditPageTrick].
 
 Consts needed:
-prop_address
+prop_addr
 prop_baidu
 prop_google
 prop_cat
 prop_mainimg
+prop_place_description
 prop_guide_parent_place
 prop_image_parent_place
+prop_parent_cat
+
 array_allowed_pcat_parent
 
 cat_place
@@ -78,3 +83,10 @@ str_place_template_name
 regex:
 match place description(Template name is ABC, with 's' option)
   \{\{ABC[^\{\}]*(\{([^\{\}]|(?1))*\})*\}\}\n?(([^=]=?)*[^=])==
+  ==>update:
+  \{\{ABC[^\{\}]*(\{([^\{\}]|(?1))*\})*[^\{\}]*\}\}\n*(([^=]=?)*[^=][^\n])\n*==
+match sub-place description
+  \==基本信息==\n*(([^=]+=?)*[^=\n]+)\s
+
+  {{子地点信息[ \n]*\|[ \n]*名称[ \n]*=[ \n]*([^\|\n ]*)
+  ==化学学院资料室===?\n*((=?[^=]+)*[^\n=])

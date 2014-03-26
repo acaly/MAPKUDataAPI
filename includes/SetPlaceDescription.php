@@ -6,11 +6,9 @@ class SetPlaceDescription {
   public static function onParserBeforeStrip( &$parser, &$text, &$strip_state ) {
     global $wgMAPKUDataAPIStr;
     
-    //if (strpos($text, '!TEST API!') !== 0) return;
-    
     $reg = '/\{\{' .
         $wgMAPKUDataAPIStr['str_place_template_name'] .
-        '[^\{\}]*(\{([^\{\}]|(?1))*\})*\}\}\n*(([^=]=?)*[^=])==/s';
+        '[^\{\}]*(\{([^\{\}]|(?1))*\})*[^\{\}]*\}\}\n*(([^=]=?)*[^=][^\n])\n*==/s';
 
     if ( preg_match($reg, $text, $match) !== 1 ) return;
 
@@ -22,5 +20,24 @@ class SetPlaceDescription {
 
     $text = $text . "\n{{#set:" . $wgMAPKUDataAPIStr['prop_place_description']
         . '=' . $description . '}}';
+
+    # Set description for subobjects
+
+    $reg_find_sub = '/\{\{' . $wgMAPKUDataAPIStr['str_sub_place_template_name']
+        . '[ \n]*\|[ \n]*' . $wgMAPKUDataAPIStr['str_sub_place_template_param_name'] 
+        . '[ \n]*=[ \n]*([^\|\n ]*)/';
+
+    if ( preg_match_all($reg_find_sub, $text, $matches) == FALSE ) return;
+    foreach ( $matches[1] as $sub_place ) {
+      $reg_find_sub_des = '\n===? *' . $name . ' *===?\n*((=?[^=]+)*[^\n=])';
+      if ( preg_match($reg_find_sub_des, $text, $match) !== 1 ) continue;
+      $description = preg_replace(
+        array("/'/", "/{/", "/}/"),
+        "",
+        $match[3]
+      );
+      $text = $text . "\n{{#subobject:" . $name . '|' . $wgMAPKUDataAPIStr['prop_place_description']
+          . '=' . $description . '}}';
+    }
   }
 }
