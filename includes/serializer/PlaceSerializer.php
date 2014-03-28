@@ -21,11 +21,23 @@ class PlaceSerializer {
   }
 
   private static function serializeContact($dataItem) {
-    print_r($dataItem);
+    if ($dataItem == null) return array();
+    $list = explode(',', $dataItem->getString());
+    $results = array();
+    foreach ($list as $entry) {
+      $results[] = explode(';', trim($entry));
+    }
+    return $results;
   }
 
   private static function serializeOpeningHours($dataItem) {
-    print_r($dataItem);
+    if ($dataItem == null) return array();
+    $list = explode(',', $dataItem->getString());
+    $results = array();
+    foreach ($list as $entry) {
+      $results[] = explode(';', trim($entry));
+    }
+    return $results;
   }
 
   public static function serializeSubPlaces($queryResult, $resultList) {
@@ -73,9 +85,9 @@ class PlaceSerializer {
           foreach ( $resultArray->getContent() as $dataItem ) {
             $result['images'][] = self::getImageThumbUrl($dataItem->getTitle()->getText(), $imgsize);
           }
-        } else if ( $printRequest->getLabel() === '-' . $wgMAPKUDataAPIStr['prop_contact']) {
+        } else if ( $printRequest->getLabel() === $wgMAPKUDataAPIStr['prop_contact']) {
           $result['contact'] = self::serializeContact($resultArray->getContent()[0]);
-        } else if ( $printRequest->getLabel() === '-' . $wgMAPKUDataAPIStr['prop_opening_hours']) {
+        } else if ( $printRequest->getLabel() === $wgMAPKUDataAPIStr['prop_opening_hours']) {
           $result['opening_hours'] = self::serializeOpeningHours($resultArray->getContent()[0]);
         } else if ( $printRequest->getLabel() === $wgMAPKUDataAPIStr['prop_sub_place_parent_place']) { # ? Why no '-' here?
           $parent_name = $resultArray->getContent()[0]->getTitle()->getText();
@@ -148,6 +160,10 @@ class PlaceSerializer {
           foreach ( $resultArray->getContent() as $dataItem ) {
             $result['images'][] = self::getImageThumbUrl($dataItem->getTitle()->getText(), $imgsize);
           }
+        } else if ( $printRequest->getLabel() === $wgMAPKUDataAPIStr['prop_contact']) {
+          $result['contact'] = self::serializeContact($resultArray->getContent()[0]);
+        } else if ( $printRequest->getLabel() === $wgMAPKUDataAPIStr['prop_opening_hours']) {
+          $result['opening_hours'] = self::serializeOpeningHours($resultArray->getContent()[0]);
         }
       }
       $result['subplaces'] = $sub_places_result[$result['name']];
