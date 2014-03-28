@@ -20,14 +20,22 @@ class PlaceSerializer {
     }
   }
 
-  private static function serializeSubPlaces($queryResult, $resultList) {
+  public static function serializeSubPlaces($queryResult, $resultList) {
+    global $wgMAPKUDataAPIStr;
     $results = array();
 
     foreach ( $queryResult->getResults() as $diWikiPage ) {
-      $result = array();
+      if ( !($diWikiPage->getTitle() instanceof Title ) ) {
+        continue;
+      }
+
+      $result = array(
+        'name' => $diWikiPage->getTitle()->getFragment(),
+      );
       $parent_name = null;
 
       foreach ( $queryResult->getPrintRequests() as $printRequest ) {
+        $resultArray = new SMWResultArray( $diWikiPage, $printRequest, $queryResult->getStore() );
         if ( $printRequest->getLabel() === $wgMAPKUDataAPIStr['prop_addr']) {
           $str = $resultArray->getContent()[0];
           if ($str != null)
@@ -57,7 +65,7 @@ class PlaceSerializer {
           foreach ( $resultArray->getContent() as $dataItem ) {
             $result['images'][] = self::getImageThumbUrl($dataItem->getTitle()->getText(), $imgsize);
           }
-        } else if ( $printRequest->getLabel() === $wgMAPKUDataAPIStr['prop_sub_place_parent_place']) {
+        } else if ( $printRequest->getLabel() === $wgMAPKUDataAPIStr['prop_sub_place_parent_place']) { # ? Why no '-' here?
           $parent_name = $resultArray->getContent()[0]->getTitle()->getText();
         }
       }
@@ -131,6 +139,9 @@ class PlaceSerializer {
         }
       }
       $result['subplaces'] = $sub_places_result[$result['name']];
+      if ( $result['subplaces'] === null ) {
+        $result['subplaces'] = array();
+      }
       $resultList->addValue(null, null, $result);
     }
   }
