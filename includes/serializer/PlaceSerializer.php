@@ -20,6 +20,14 @@ class PlaceSerializer {
     }
   }
 
+  private static function serializeContact($dataItem) {
+    print_r($dataItem);
+  }
+
+  private static function serializeOpeningHours($dataItem) {
+    print_r($dataItem);
+  }
+
   public static function serializeSubPlaces($queryResult, $resultList) {
     global $wgMAPKUDataAPIStr;
     $results = array();
@@ -65,6 +73,10 @@ class PlaceSerializer {
           foreach ( $resultArray->getContent() as $dataItem ) {
             $result['images'][] = self::getImageThumbUrl($dataItem->getTitle()->getText(), $imgsize);
           }
+        } else if ( $printRequest->getLabel() === '-' . $wgMAPKUDataAPIStr['prop_contact']) {
+          $result['contact'] = self::serializeContact($resultArray->getContent()[0]);
+        } else if ( $printRequest->getLabel() === '-' . $wgMAPKUDataAPIStr['prop_opening_hours']) {
+          $result['opening_hours'] = self::serializeOpeningHours($resultArray->getContent()[0]);
         } else if ( $printRequest->getLabel() === $wgMAPKUDataAPIStr['prop_sub_place_parent_place']) { # ? Why no '-' here?
           $parent_name = $resultArray->getContent()[0]->getTitle()->getText();
         }

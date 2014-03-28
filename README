@@ -70,6 +70,8 @@ prop_image_parent_place
 prop_parent_cat
 prop_sub_place_parent_place
 prop_subobject_type
+prop_contact
+prop_opening_hours
 
 array_allowed_pcat_parent
 
