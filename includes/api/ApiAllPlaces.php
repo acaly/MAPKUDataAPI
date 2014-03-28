@@ -13,6 +13,30 @@ class ApiAllPlaces extends ApiDataBase {
    */
   public function run( $resultPageSet = null ) {
     global $wgMAPKUDataAPIStr;
+    # Get all sub places first
+
+    list( $queryString, $parameters, $printouts ) = 
+        SMWQueryProcessor::getComponentsFromFunctionParams(
+          array(
+            '[[' . $wgMAPKUDataAPIStr['prop_subobject_type'] . '::' . $wgMAPKUDataAPIStr['str_subobject_place'] . ']]',
+            '?' . $wgMAPKUDataAPIStr['prop_addr'],
+            '?' . $wgMAPKUDataAPIStr['prop_cat'],
+            '?' . $wgMAPKUDataAPIStr['prop_place_description'],
+            '?-'. $wgMAPKUDataAPIStr['prop_guide_parent_place'],
+            '?-'. $wgMAPKUDataAPIStr['prop_image_parent_place'],
+            '?'. $wgMAPKUDataAPIStr['prop_sub_place_parent_place'],
+          ),
+          false
+        );
+
+    $queryResult = $this->getQueryResult( $this->getQuery(
+      $queryString,
+      $printouts,
+      $parameters
+    ) );
+    $subplaces = PlaceSerializer::serializeSubPlaces($queryResult, $this->getResult());
+
+    # Get all places
     $cat = $wgMAPKUDataAPIStr['cat_place'];
     list( $queryString, $parameters, $printouts ) = 
         SMWQueryProcessor::getComponentsFromFunctionParams(
@@ -49,7 +73,7 @@ class ApiAllPlaces extends ApiDataBase {
         break;
     }
 
-    PlaceSerializer::serializePlaceArray($queryResult, $this->getResult(), $imgsize);
+    PlaceSerializer::serializePlaceArray($queryResult, $this->getResult(), $imgsize, $subplaces);
   }
 
   public function getAllowedParams() {

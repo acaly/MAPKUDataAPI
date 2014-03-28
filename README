@@ -68,6 +68,8 @@ prop_place_description
 prop_guide_parent_place
 prop_image_parent_place
 prop_parent_cat
+prop_sub_place_parent_place
+prop_subobject_type
 
 array_allowed_pcat_parent
 
@@ -76,9 +78,10 @@ cat_image
 cat_guide
 cat_sort
 
-array_allowed_pcat_parent
-
 str_place_template_name
+str_sub_place_template_name
+str_sub_place_template_param_name
+str_subobject_place
 
 regex:
 match place description(Template name is ABC, with 's' option)
