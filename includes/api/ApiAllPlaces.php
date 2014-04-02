@@ -27,6 +27,7 @@ class ApiAllPlaces extends ApiDataBase {
             '?-'. $wgMAPKUDataAPIStr['prop_guide_parent_place'],
             '?-'. $wgMAPKUDataAPIStr['prop_image_parent_place'],
             '?-'. $wgMAPKUDataAPIStr['prop_sub_place_parent_place'],
+            'limit=10000',
           ),
           false
         );
@@ -54,6 +55,7 @@ class ApiAllPlaces extends ApiDataBase {
             '?' . $wgMAPKUDataAPIStr['prop_opening_hours'],
             '?-'. $wgMAPKUDataAPIStr['prop_guide_parent_place'],
             '?-'. $wgMAPKUDataAPIStr['prop_image_parent_place'],
+            'limit=10000',
           ),
           false
         );
